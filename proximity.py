@@ -19,21 +19,24 @@ def distancing(peoplelist,machinelist, img, dist_thres_lim=(100,150)):
         already_red[j] = 0
     x_combs = list(itertools.product(peoplelist,machinelist))
     radius = 10
-    thickness = 5
+    thickness = 2
     for x in x_combs:
         xyxy1, xyxy2 = x[0],x[1]
         cntr1 = ((int(xyxy1[2])+int(xyxy1[0]))//2,(int(xyxy1[3])+int(xyxy1[1]))//2)
         cntr2 = ((int(xyxy2[2])+int(xyxy2[0]))//2,(int(xyxy2[3])+int(xyxy2[1]))//2)
         dist = ((cntr2[0]-cntr1[0])**2 + (cntr2[1]-cntr1[1])**2)**0.5
-
         if dist < dist_thres_lim[0]:
             violationcounter += 1
             color = (0, 0, 255)
+            mcolor = (255, 0, 0)
+            lcolor = (0, 255, 0)
             already_red[cntr1] = 1
             already_red[cntr2] = 1
-            cv2.line(img, cntr1, cntr2, color, thickness)
+            cv2.line(img, cntr1, cntr2, lcolor, thickness)
             cv2.circle(img, cntr1, radius, color, -1)
-            cv2.circle(img, cntr2, radius, color, -1)
+            cv2.circle(img, cntr2, radius, mcolor, -1)
+            cv2.rectangle(img, (int(xyxy1[0]),int(xyxy1[1])), (int(xyxy1[2]),int(xyxy1[3])), color, thickness)
+            cv2.rectangle(img, (int(xyxy2[0]),int(xyxy2[1])), (int(xyxy2[2]),int(xyxy2[3])), mcolor, thickness)
     return img, violationcounter
 
 
